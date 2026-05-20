@@ -1,0 +1,1051 @@
+cat > /mnt/user-data/outputs/faraz-portfolio.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Faraz Ahmed — Graphic Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0e0e0e;
+    --bg2: #161616;
+    --bg3: #1f1f1f;
+    --card: #181818;
+    --border: #2a2a2a;
+    --border2: #383838;
+    --text: #f0ede8;
+    --muted: #888;
+    --muted2: #555;
+    --accent: #c8f55a;
+    --accent2: #e8ff88;
+    --white: #f0ede8;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(200, 245, 90, 0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.18s ease;
+  }
+  .cursor.active { width: 6px; height: 6px; background: var(--accent2); }
+  .cursor-ring.active { width: 48px; height: 48px; border-color: rgba(200, 245, 90, 0.6); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.35;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 500;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 60px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, background 0.3s, padding 0.3s;
+  }
+  nav.scrolled {
+    background: rgba(14,14,14,0.92);
+    backdrop-filter: blur(12px);
+    border-color: var(--border);
+    padding: 18px 60px;
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--bg); background: var(--accent);
+    padding: 10px 24px; border-radius: 2px;
+    text-decoration: none; font-weight: 500;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .nav-cta:hover { background: var(--accent2); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 60px 80px;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.3;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 100%);
+  }
+
+  .hero-number {
+    position: absolute; top: 140px; right: 60px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(180px, 28vw, 380px);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.05);
+    line-height: 1; pointer-events: none; user-select: none;
+    letter-spacing: -4px;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border2);
+    padding: 8px 16px; border-radius: 100px;
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 32px;
+    width: fit-content;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-badge-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent); animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 12vw, 160px);
+    line-height: 0.9;
+    letter-spacing: -2px;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+  .hero-title .line2 { color: var(--accent); display: block; }
+
+  .hero-bottom {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-top: 48px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+  .hero-desc {
+    max-width: 400px;
+    font-size: 16px; line-height: 1.7;
+    color: var(--muted);
+  }
+  .hero-scroll {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted2);
+  }
+  .scroll-line {
+    width: 60px; height: 1px; background: var(--muted2);
+    animation: scrollAnim 2s ease infinite;
+  }
+  @keyframes scrollAnim { 0%{width:20px;opacity:0.3} 50%{width:60px;opacity:1} 100%{width:20px;opacity:0.3} }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── MARQUEE ── */
+  .marquee-wrap {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden; padding: 18px 0;
+    background: var(--bg2);
+  }
+  .marquee-inner {
+    display: flex; gap: 0;
+    animation: marquee 22s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    display: flex; align-items: center; gap: 24px;
+    padding: 0 32px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: 3px;
+    color: var(--muted2);
+  }
+  .marquee-item .dot { color: var(--accent); font-size: 28px; line-height: 0; }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ── SECTION COMMONS ── */
+  section { padding: 120px 60px; }
+
+  .section-label {
+    display: flex; align-items: center; gap: 16px;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--muted2); margin-bottom: 64px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; max-width: 80px;
+    height: 1px; background: var(--border2);
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(44px, 7vw, 88px);
+    line-height: 0.95; letter-spacing: -1px;
+  }
+  .section-title .accent { color: var(--accent); }
+
+  /* ── ABOUT ── */
+  .about { background: var(--bg); }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 100px;
+    align-items: center; margin-top: 80px;
+  }
+  .about-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+    margin-top: 48px;
+  }
+  .stat-box {
+    background: var(--bg3); padding: 28px 24px;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .stat-box:hover { border-color: var(--border2); background: #222; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px; color: var(--accent);
+    line-height: 1; letter-spacing: -1px;
+  }
+  .stat-label { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+
+  .about-text-side p {
+    font-size: 17px; line-height: 1.8; color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .about-text-side p strong { color: var(--text); font-weight: 500; }
+
+  .skills-list {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-top: 40px;
+  }
+  .skill-tag {
+    font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 8px 16px; border: 1px solid var(--border2);
+    color: var(--muted); border-radius: 2px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .skill-tag:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── SERVICES ── */
+  .services { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--border);
+    margin-top: 80px; border: 1px solid var(--border);
+  }
+  .service-card {
+    background: var(--bg2); padding: 48px 36px;
+    position: relative; overflow: hidden;
+    transition: background 0.25s;
+  }
+  .service-card::before {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 2px;
+    background: var(--accent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  .service-card:hover { background: #1c1c1c; }
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--muted2);
+    margin-bottom: 32px; letter-spacing: 1px;
+  }
+  .service-icon {
+    font-size: 32px; margin-bottom: 20px; line-height: 1;
+  }
+  .service-name {
+    font-size: 20px; font-weight: 500;
+    margin-bottom: 14px; color: var(--text);
+  }
+  .service-desc { font-size: 14px; line-height: 1.7; color: var(--muted); }
+
+  /* ── WORKS ── */
+  .works { background: var(--bg); }
+  .works-filter {
+    display: flex; gap: 8px; margin-bottom: 60px; flex-wrap: wrap;
+  }
+  .filter-btn {
+    font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 9px 20px; border: 1px solid var(--border);
+    background: transparent; color: var(--muted);
+    cursor: none; border-radius: 2px; transition: all 0.2s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--accent); color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  .works-grid {
+    display: grid; grid-template-columns: repeat(12, 1fr);
+    gap: 16px;
+  }
+  .work-card {
+    position: relative; overflow: hidden;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 3px; cursor: none;
+    transition: transform 0.3s ease, border-color 0.2s;
+  }
+  .work-card:hover { transform: translateY(-4px); border-color: var(--border2); }
+  .work-card:nth-child(1) { grid-column: span 8; }
+  .work-card:nth-child(2) { grid-column: span 4; }
+  .work-card:nth-child(3) { grid-column: span 4; }
+  .work-card:nth-child(4) { grid-column: span 4; }
+  .work-card:nth-child(5) { grid-column: span 4; }
+  .work-card:nth-child(6) { grid-column: span 6; }
+  .work-card:nth-child(7) { grid-column: span 6; }
+
+  .work-thumb {
+    width: 100%; aspect-ratio: 4/3;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px; position: relative; overflow: hidden;
+  }
+  .work-card:nth-child(1) .work-thumb { aspect-ratio: 16/9; }
+  .work-card:nth-child(2) .work-thumb,
+  .work-card:nth-child(3) .work-thumb { aspect-ratio: 1; }
+
+  /* Colorful placeholder backgrounds */
+  .work-card:nth-child(1) .work-thumb { background: linear-gradient(135deg, #1a1a1a 0%, #2c2c1a 50%, #1f1f0f 100%); }
+  .work-card:nth-child(2) .work-thumb { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
+  .work-card:nth-child(3) .work-thumb { background: linear-gradient(135deg, #1a2a1a 0%, #0d1f0d 100%); }
+  .work-card:nth-child(4) .work-thumb { background: linear-gradient(135deg, #2a1a1a 0%, #1f0d0d 100%); }
+  .work-card:nth-child(5) .work-thumb { background: linear-gradient(135deg, #1a2030 0%, #0a1020 100%); }
+  .work-card:nth-child(6) .work-thumb { background: linear-gradient(135deg, #201a2a 0%, #110d1a 100%); }
+  .work-card:nth-child(7) .work-thumb { background: linear-gradient(135deg, #2a2010 0%, #1a1408 100%); }
+
+  /* Abstract SVG art inside each card */
+  .work-thumb svg { width: 100%; height: 100%; position: absolute; inset: 0; }
+
+  .work-overlay {
+    position: absolute; inset: 0;
+    background: rgba(14,14,14,0.88);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 24px;
+    opacity: 0; transition: opacity 0.3s ease;
+  }
+  .work-card:hover .work-overlay { opacity: 1; }
+  .work-overlay-tag {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 6px;
+  }
+  .work-overlay-title { font-size: 16px; font-weight: 500; color: var(--text); }
+  .work-overlay-arrow {
+    position: absolute; top: 20px; right: 20px;
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent); font-size: 16px;
+  }
+
+  .work-info { padding: 20px 20px 22px; }
+  .work-category { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted2); margin-bottom: 4px; }
+  .work-title { font-size: 15px; font-weight: 500; color: var(--text); }
+
+  /* ── PROCESS ── */
+  .process { background: var(--bg2); border-top: 1px solid var(--border); }
+  .process-steps {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; margin-top: 80px;
+    border: 1px solid var(--border);
+  }
+  .process-step {
+    padding: 48px 32px; border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .process-step:last-child { border-right: none; }
+  .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--accent);
+    letter-spacing: 2px; margin-bottom: 28px;
+    display: block;
+  }
+  .step-title { font-size: 20px; font-weight: 500; margin-bottom: 14px; }
+  .step-desc { font-size: 14px; line-height: 1.7; color: var(--muted); }
+
+  .connector {
+    position: absolute; top: 48px; right: -20px;
+    width: 40px; height: 1px; background: var(--accent);
+    z-index: 1;
+  }
+  .connector::after {
+    content: ''; position: absolute; right: -1px; top: -3px;
+    width: 6px; height: 6px; border-top: 1px solid var(--accent); border-right: 1px solid var(--accent);
+    transform: rotate(45deg);
+  }
+  .process-step:last-child .connector { display: none; }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials { background: var(--bg); }
+  .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 80px; }
+  .testi-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    padding: 36px 32px; border-radius: 3px;
+    transition: border-color 0.2s;
+  }
+  .testi-card:hover { border-color: var(--border2); }
+  .testi-stars { color: var(--accent); font-size: 14px; margin-bottom: 20px; letter-spacing: 3px; }
+  .testi-text { font-size: 15px; line-height: 1.75; color: var(--muted); font-style: italic; margin-bottom: 28px; }
+  .testi-author { display: flex; align-items: center; gap: 14px; }
+  .testi-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--border2); display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 500; color: var(--muted);
+  }
+  .testi-name { font-size: 14px; font-weight: 500; color: var(--text); }
+  .testi-role { font-size: 12px; color: var(--muted2); letter-spacing: 0.5px; }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: var(--accent);
+    padding: 120px 60px;
+    position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: 'LETS WORK';
+    position: absolute; top: -20px; left: 0; right: 0;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 16vw, 220px);
+    color: rgba(0,0,0,0.07);
+    white-space: nowrap; pointer-events: none;
+    letter-spacing: -4px;
+  }
+  .cta-inner { position: relative; }
+  .cta-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 9vw, 120px);
+    color: var(--bg); line-height: 0.9;
+    letter-spacing: -2px; margin-bottom: 40px;
+  }
+  .cta-row { display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+  .cta-email {
+    font-size: 18px; color: rgba(0,0,0,0.5);
+    font-family: 'JetBrains Mono', monospace;
+    text-decoration: none; border-bottom: 1px solid rgba(0,0,0,0.2);
+    padding-bottom: 4px; transition: color 0.2s;
+  }
+  .cta-email:hover { color: var(--bg); }
+  .cta-btn {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--bg); color: var(--accent);
+    padding: 18px 36px; border-radius: 100px;
+    text-decoration: none; font-size: 14px;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    font-weight: 500; transition: transform 0.2s, background 0.2s;
+    white-space: nowrap;
+  }
+  .cta-btn:hover { transform: scale(1.04); background: #111; }
+  .cta-btn-arrow { font-size: 18px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg2); border-top: 1px solid var(--border);
+    padding: 48px 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: 3px; color: var(--text);
+  }
+  .footer-logo span { color: var(--accent); }
+  .footer-links { display: flex; gap: 32px; }
+  .footer-links a {
+    font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted2); text-decoration: none; transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--muted); }
+  .footer-copy {
+    font-size: 12px; color: var(--muted2);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── REVEAL ANIMATIONS ── */
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    nav { padding: 24px 32px; }
+    nav.scrolled { padding: 16px 32px; }
+    section { padding: 80px 32px; }
+    .hero { padding: 0 32px 60px; }
+    .about-grid { grid-template-columns: 1fr; gap: 60px; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    .works-grid { grid-template-columns: 1fr 1fr; }
+    .work-card:nth-child(n) { grid-column: span 1; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .process-step { border-right: none; border-bottom: 1px solid var(--border); }
+    .process-step:nth-child(odd) { border-right: 1px solid var(--border); }
+    .connector { display: none !important; }
+    .testi-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 24px; text-align: center; }
+    .cta-row { flex-direction: column; align-items: flex-start; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 600px) {
+    .hero-title { font-size: 62px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .works-grid { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr; }
+    .process-step:nth-child(odd) { border-right: none; }
+    .about-stats { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">Faraz<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#works">Works</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Hire Me</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-number">FA</div>
+
+  <div class="hero-badge">
+    <div class="hero-badge-dot"></div>
+    Available for freelance — 2025
+  </div>
+
+  <h1 class="hero-title">
+    Faraz<br>
+    <span class="line2">Ahmed</span>
+  </h1>
+
+  <div class="hero-bottom">
+    <p class="hero-desc">
+      Graphic designer crafting visual identities, brand systems, and digital experiences that leave a lasting impression.
+    </p>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      Scroll to explore
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-inner">
+    <div class="marquee-item"><span class="dot">★</span> Logo Design <span class="dot">★</span> Brand Identity <span class="dot">★</span> Social Media <span class="dot">★</span> UI / UX <span class="dot">★</span> Motion Graphics <span class="dot">★</span> Packaging <span class="dot">★</span> Print Design <span class="dot">★</span> Typography</div>
+    <div class="marquee-item"><span class="dot">★</span> Logo Design <span class="dot">★</span> Brand Identity <span class="dot">★</span> Social Media <span class="dot">★</span> UI / UX <span class="dot">★</span> Motion Graphics <span class="dot">★</span> Packaging <span class="dot">★</span> Print Design <span class="dot">★</span> Typography</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="section-label reveal">01 — About Me</div>
+  <h2 class="section-title reveal reveal-delay-1">Designing <span class="accent">Experiences</span><br>That Matter</h2>
+  <div class="about-grid">
+    <div class="about-left reveal reveal-delay-2">
+      <div class="about-stats">
+        <div class="stat-box">
+          <div class="stat-num">3+</div>
+          <div class="stat-label">Years Experience</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">80+</div>
+          <div class="stat-label">Projects Delivered</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">45+</div>
+          <div class="stat-label">Happy Clients</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">12+</div>
+          <div class="stat-label">Awards Won</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-text-side reveal reveal-delay-3">
+      <p>I'm <strong>Faraz Ahmed</strong>, a passionate graphic designer based in Bangladesh with a love for clean, intentional design that communicates with purpose.</p>
+      <p>From crafting <strong>brand identities</strong> from scratch to designing scroll-stopping <strong>social media content</strong>, I bring ideas to life with a blend of strategy, creativity, and technical skill.</p>
+      <p>Every project is an opportunity to solve a visual problem — and I approach each one with curiosity, precision, and a lot of coffee.</p>
+      <div class="skills-list">
+        <span class="skill-tag">Photoshop</span>
+        <span class="skill-tag">Illustrator</span>
+        <span class="skill-tag">Figma</span>
+        <span class="skill-tag">After Effects</span>
+        <span class="skill-tag">InDesign</span>
+        <span class="skill-tag">Canva Pro</span>
+        <span class="skill-tag">Premiere Pro</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="section-label reveal">02 — Services</div>
+  <h2 class="section-title reveal reveal-delay-1">What I <span class="accent">Do</span></h2>
+  <div class="services-grid reveal reveal-delay-2">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <div class="service-icon">◈</div>
+      <div class="service-name">Logo & Branding</div>
+      <p class="service-desc">Complete brand identity systems including logos, color palettes, typography, and brand guidelines that tell your story.</p>
+      <div class="connector"></div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <div class="service-icon">◉</div>
+      <div class="service-name">Social Media Design</div>
+      <p class="service-desc">Eye-catching posts, stories, banners, and content kits optimized for engagement across all platforms.</p>
+      <div class="connector"></div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <div class="service-icon">◫</div>
+      <div class="service-name">UI / UX Design</div>
+      <p class="service-desc">Intuitive, beautiful digital interfaces — from wireframes to polished high-fidelity prototypes in Figma.</p>
+      <div class="connector"></div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <div class="service-icon">▣</div>
+      <div class="service-name">Print & Packaging</div>
+      <p class="service-desc">Brochures, business cards, packaging design, and all print collateral crafted for premium real-world impact.</p>
+      <div class="connector"></div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <div class="service-icon">◌</div>
+      <div class="service-name">Motion Graphics</div>
+      <p class="service-desc">Animated logos, explainer videos, and dynamic visual content that adds life to your brand.</p>
+      <div class="connector"></div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <div class="service-icon">◧</div>
+      <div class="service-name">Illustration</div>
+      <p class="service-desc">Custom digital illustrations, icons, and visual elements that give your brand a truly unique personality.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WORKS -->
+<section class="works" id="works">
+  <div class="section-label reveal">03 — Portfolio</div>
+  <h2 class="section-title reveal reveal-delay-1">Selected <span class="accent">Works</span></h2>
+
+  <div class="works-filter reveal reveal-delay-2">
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">Branding</button>
+    <button class="filter-btn">Social Media</button>
+    <button class="filter-btn">UI / UX</button>
+    <button class="filter-btn">Print</button>
+  </div>
+
+  <div class="works-grid reveal reveal-delay-3">
+    <!-- Card 1 - Large -->
+    <div class="work-card">
+      <div class="work-thumb">
+        <svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice">
+          <rect width="800" height="450" fill="#1a1a0a"/>
+          <circle cx="600" cy="225" r="200" fill="none" stroke="#c8f55a" stroke-width="1" opacity="0.3"/>
+          <circle cx="600" cy="225" r="140" fill="none" stroke="#c8f55a" stroke-width="0.5" opacity="0.2"/>
+          <circle cx="600" cy="225" r="80" fill="#c8f55a" opacity="0.08"/>
+          <text x="100" y="200" font-family="Georgia,serif" font-size="80" fill="#c8f55a" opacity="0.7" font-style="italic">Nova</text>
+          <text x="100" y="260" font-family="Georgia,serif" font-size="80" fill="#c8f55a" opacity="0.7" font-style="italic">Brand</text>
+          <rect x="100" y="280" width="180" height="1" fill="#c8f55a" opacity="0.4"/>
+          <text x="100" y="305" font-family="monospace" font-size="11" fill="#888" letter-spacing="4">IDENTITY SYSTEM</text>
+        </svg>
+        <div class="work-overlay">
+          <div class="work-overlay-tag">Branding</div>
+          <div class="work-overlay-title">Nova Brand Identity System</div>
+          <div class="work-overlay-arrow">↗</div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">Branding · 2024</div>
+        <div class="work-title">Nova Brand Identity System</div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="work-card">
+      <div class="work-thumb">
+        <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="400" fill="#0a0a1a"/>
+          <rect x="60" y="60" width="280" height="280" rx="8" fill="none" stroke="#4f8ef7" stroke-width="1" opacity="0.4"/>
+          <rect x="100" y="100" width="200" height="200" rx="4" fill="#1a2040" opacity="0.6"/>
+          <circle cx="200" cy="180" r="50" fill="none" stroke="#4f8ef7" stroke-width="2" opacity="0.7"/>
+          <rect x="140" y="255" width="120" height="8" rx="4" fill="#4f8ef7" opacity="0.5"/>
+          <rect x="160" y="270" width="80" height="6" rx="3" fill="#4f8ef7" opacity="0.25"/>
+        </svg>
+        <div class="work-overlay">
+          <div class="work-overlay-tag">UI/UX</div>
+          <div class="work-overlay-title">FinFlow App Design</div>
+          <div class="work-overlay-arrow">↗</div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">UI/UX · 2024</div>
+        <div class="work-title">FinFlow App Design</div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="work-card">
+      <div class="work-thumb">
+        <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="400" fill="#0a1a0a"/>
+          <polygon points="200,60 340,280 60,280" fill="none" stroke="#5dca85" stroke-width="1.5" opacity="0.5"/>
+          <polygon points="200,100 310,260 90,260" fill="none" stroke="#5dca85" stroke-width="0.7" opacity="0.3"/>
+          <circle cx="200" cy="200" r="40" fill="#5dca85" opacity="0.12"/>
+          <text x="200" y="340" font-family="monospace" font-size="12" fill="#5dca85" opacity="0.5" text-anchor="middle" letter-spacing="3">ECO MARK</text>
+        </svg>
+        <div class="work-overlay">
+          <div class="work-overlay-tag">Logo Design</div>
+          <div class="work-overlay-title">EcoMark Logo</div>
+          <div class="work-overlay-arrow">↗</div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">Logo · 2024</div>
+        <div class="work-title">EcoMark Logo Design</div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="work-card">
+      <div class="work-thumb">
+        <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="300" fill="#1a0a0a"/>
+          <rect x="30" y="30" width="160" height="240" rx="4" fill="#2a1010"/>
+          <rect x="40" y="50" width="140" height="80" rx="2" fill="#c8f55a" opacity="0.15"/>
+          <rect x="40" y="145" width="100" height="6" rx="3" fill="#888" opacity="0.4"/>
+          <rect x="40" y="158" width="130" height="5" rx="2" fill="#555" opacity="0.4"/>
+          <rect x="40" y="170" width="110" height="5" rx="2" fill="#555" opacity="0.3"/>
+          <rect x="210" y="30" width="160" height="115" rx="4" fill="#200d0d"/>
+          <text x="290" y="100" font-family="Georgia,serif" font-size="36" fill="#c8f55a" opacity="0.5" text-anchor="middle">Rg</text>
+          <rect x="210" y="155" width="160" height="115" rx="4" fill="#200d0d"/>
+          <rect x="230" y="175" width="120" height="7" rx="3" fill="#c8f55a" opacity="0.3"/>
+          <rect x="230" y="190" width="90" height="5" rx="2" fill="#888" opacity="0.3"/>
+        </svg>
+        <div class="work-overlay">
+          <div class="work-overlay-tag">Print</div>
+          <div class="work-overlay-title">Rouge Magazine Layout</div>
+          <div class="work-overlay-arrow">↗</div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">Print · 2023</div>
+        <div class="work-title">Rouge Magazine Layout</div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="work-card">
+      <div class="work-thumb">
+        <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="300" fill="#0a1020"/>
+          <rect x="50" y="40" width="120" height="200" rx="60" fill="none" stroke="#378add" stroke-width="1.5" opacity="0.4"/>
+          <rect x="230" y="40" width="120" height="200" rx="60" fill="none" stroke="#378add" stroke-width="1.5" opacity="0.4"/>
+          <rect x="140" y="70" width="120" height="160" rx="60" fill="#1a3050" opacity="0.3"/>
+          <circle cx="200" cy="150" r="30" fill="#378add" opacity="0.2"/>
+          <text x="200" y="265" font-size="9" fill="#378add" opacity="0.4" text-anchor="middle" letter-spacing="4" font-family="monospace">SOCIAL PACK</text>
+        </svg>
+        <div class="work-overlay">
+          <div class="work-overlay-tag">Social Media</div>
+          <div class="work-overlay-title">Pulse Social Pack</div>
+          <div class="work-overlay-arrow">↗</div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">Social Media · 2024</div>
+        <div class="work-title">Pulse Social Media Pack</div>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="work-card">
+      <div class="work-thumb">
+        <svg viewBox="0 0 600 300" preserveAspectRatio="xMidYMid slice">
+          <rect width="600" height="300" fill="#100d1a"/>
+          <rect x="60" y="60" width="180" height="180" rx="4" fill="#1e1530"/>
+          <circle cx="150" cy="130" r="45" fill="none" stroke="#9f77dd" stroke-width="2" opacity="0.5"/>
+          <rect x="80" y="195" width="140" height="6" rx="3" fill="#9f77dd" opacity="0.3"/>
+          <rect x="100" y="210" width="100" height="4" rx="2" fill="#534ab7" opacity="0.25"/>
+          <rect x="280" y="60" width="260" height="80" rx="4" fill="#1e1530"/>
+          <rect x="300" y="80" width="100" height="8" rx="4" fill="#9f77dd" opacity="0.4"/>
+          <rect x="300" y="98" width="160" height="5" rx="2" fill="#534ab7" opacity="0.25"/>
+          <rect x="300" y="110" width="140" height="5" rx="2" fill="#534ab7" opacity="0.2"/>
+          <rect x="280" y="160" width="260" height="80" rx="4" fill="#1e1530"/>
+          <circle cx="310" cy="200" r="20" fill="#2a1e40"/>
+          <rect x="340" y="190" width="100" height="6" rx="3" fill="#9f77dd" opacity="0.3"/>
+          <rect x="340" y="205" width="140" height="5" rx="2" fill="#534ab7" opacity="0.2"/>
+        </svg>
+        <div class="work-overlay">
+          <div class="work-overlay-tag">UI/UX</div>
+          <div class="work-overlay-title">Aether Dashboard UI</div>
+          <div class="work-overlay-arrow">↗</div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">UI/UX · 2024</div>
+        <div class="work-title">Aether Dashboard UI</div>
+      </div>
+    </div>
+
+    <!-- Card 7 -->
+    <div class="work-card">
+      <div class="work-thumb">
+        <svg viewBox="0 0 600 300" preserveAspectRatio="xMidYMid slice">
+          <rect width="600" height="300" fill="#1a1408"/>
+          <rect x="60" y="60" width="200" height="180" rx="4" fill="#241c08"/>
+          <rect x="75" y="80" width="170" height="120" rx="2" fill="#2e2408"/>
+          <text x="160" y="155" font-family="Georgia,serif" font-size="48" fill="#ef9f27" opacity="0.4" text-anchor="middle">☕</text>
+          <text x="160" y="220" font-size="11" fill="#ba7517" opacity="0.5" text-anchor="middle" letter-spacing="3" font-family="monospace">KAFE CO.</text>
+          <rect x="290" y="60" width="250" height="180" rx="4" fill="#241c08"/>
+          <rect x="310" y="80" width="210" height="80" rx="2" fill="#2e2408"/>
+          <text x="415" y="128" font-family="Georgia,serif" font-size="36" fill="#ef9f27" opacity="0.3" text-anchor="middle">Kafe</text>
+          <rect x="310" y="170" width="140" height="7" rx="3" fill="#ef9f27" opacity="0.3"/>
+          <rect x="310" y="185" width="190" height="5" rx="2" fill="#ba7517" opacity="0.2"/>
+          <rect x="310" y="198" width="160" height="5" rx="2" fill="#ba7517" opacity="0.15"/>
+        </svg>
+        <div class="work-overlay">
+          <div class="work-overlay-tag">Branding</div>
+          <div class="work-overlay-title">Kafe Co. Packaging</div>
+          <div class="work-overlay-arrow">↗</div>
+        </div>
+      </div>
+      <div class="work-info">
+        <div class="work-category">Packaging · 2023</div>
+        <div class="work-title">Kafe Co. Packaging Design</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="process">
+  <div class="section-label reveal">04 — How I Work</div>
+  <h2 class="section-title reveal reveal-delay-1">My <span class="accent">Process</span></h2>
+  <div class="process-steps reveal reveal-delay-2">
+    <div class="process-step">
+      <span class="step-num">01</span>
+      <div class="step-title">Discovery</div>
+      <p class="step-desc">Deep dive into your brand, goals, audience, and competition. I ask the right questions to understand exactly what you need.</p>
+      <div class="connector"></div>
+    </div>
+    <div class="process-step">
+      <span class="step-num">02</span>
+      <div class="step-title">Concept</div>
+      <p class="step-desc">Brainstorming and sketching ideas. I explore multiple visual directions before narrowing down to the strongest concepts.</p>
+      <div class="connector"></div>
+    </div>
+    <div class="process-step">
+      <span class="step-num">03</span>
+      <div class="step-title">Design</div>
+      <p class="step-desc">Bringing concepts to life with precision. Iterating with your feedback until every detail is exactly right.</p>
+      <div class="connector"></div>
+    </div>
+    <div class="process-step">
+      <span class="step-num">04</span>
+      <div class="step-title">Deliver</div>
+      <p class="step-desc">Final files delivered in all required formats, with full ownership and optional post-launch support included.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="section-label reveal">05 — Testimonials</div>
+  <h2 class="section-title reveal reveal-delay-1">Client <span class="accent">Love</span></h2>
+  <div class="testi-grid">
+    <div class="testi-card reveal reveal-delay-1">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Faraz completely transformed our brand. The new identity is clean, modern, and exactly what we envisioned — delivered ahead of schedule."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">RK</div>
+        <div>
+          <div class="testi-name">Rakib Khan</div>
+          <div class="testi-role">CEO, Zenith Studios</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal reveal-delay-2">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Our social media engagement went up by 3x after Faraz designed our content templates. Incredible attention to detail and communication."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">SA</div>
+        <div>
+          <div class="testi-name">Sadia Akhter</div>
+          <div class="testi-role">Marketing Lead, Bloom Co.</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal reveal-delay-3">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Truly a design partner, not just a freelancer. Faraz understands business goals and creates work that actually converts. Highly recommended."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">MH</div>
+        <div>
+          <div class="testi-name">Mehedi Hasan</div>
+          <div class="testi-role">Founder, Nexus Digital</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section" id="contact">
+  <div class="cta-inner">
+    <h2 class="cta-title">Let's Create<br>Together.</h2>
+    <div class="cta-row">
+      <a href="mailto:faraz@example.com" class="cta-email">faraz@example.com</a>
+      <a href="mailto:faraz@example.com" class="cta-btn">
+        Start a Project <span class="cta-btn-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Faraz<span>.</span></div>
+  <div class="footer-links">
+    <a href="#">Behance</a>
+    <a href="#">Dribbble</a>
+    <a href="#">LinkedIn</a>
+    <a href="#">Instagram</a>
+  </div>
+  <div class="footer-copy">© 2025 Faraz Ahmed</div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function lerpRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(lerpRing);
+  }
+  lerpRing();
+
+  document.querySelectorAll('a, button, .work-card, .service-card, .stat-box').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.classList.add('active'); ring.classList.add('active'); });
+    el.addEventListener('mouseleave', () => { cursor.classList.remove('active'); ring.classList.remove('active'); });
+  });
+
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // Smooth hover tilt on work cards
+  document.querySelectorAll('.work-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform = `translateY(-4px) rotateY(${x * 4}deg) rotateX(${-y * 4}deg)`;
+      card.style.perspective = '800px';
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+</script>
+</body>
+</html>
+HTMLEOF
+echo "Done"
+Output
+
